@@ -37,7 +37,7 @@ class Navbar extends Component {
         return (
             <header className="navbar">
                 <div onClick={() => this.goToPath('/')} className="home-link router-link-exact-active router-link-active cursor-pointer">
-                    <span className="site-name">MERN</span>
+                    <span className="site-name">ShailKart</span>
                 </div>
                 <div className="links" style={{maxWidth: '1312px'}}>
                     

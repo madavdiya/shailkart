@@ -1,5 +1,5 @@
 const express = require('express')
-const app = express()
+const app = express();
 const cors = require('cors');
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
@@ -22,8 +22,8 @@ app.use(express.static(path.join(__dirname, `${process.env.NODE_ENV === 'develop
 app.get('/abc', (req, res) => {
     res.send('ok');
 });
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, `${process.env.NODE_ENV === 'development'? 'public' : 'build'}/index.html`));
-});
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, `${process.env.NODE_ENV === 'development'? 'public' : 'build'}/index.html`));
+// });
 
 module.exports = app

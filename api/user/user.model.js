@@ -1,6 +1,5 @@
   
 const mongoose = require('mongoose');
-
 const Schema = mongoose.Schema;
 
 let UserSchema = new Schema({
@@ -15,7 +14,7 @@ let UserSchema = new Schema({
         state: {type:String},
         pin: {type:Number}
     },
-    phone: {type:Number}
+    phone: {type:Number},
 });
 
-export default mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);

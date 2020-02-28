@@ -1,9 +1,12 @@
-import { Router } from 'express';
-import controller  from './user.controller' 
-const router = Router();
+const express = require('express');
+const userController = require('./user.controller');
+const utils = require('../../helpers/utils');
+const router = express.Router();
 
-router
-    .route('/newUser')
-    .post(controller.newUser);
+router.post('/login', utils.verifyLogin)
+    .post('/createUser', utils.bycryptPassword, userController.newUser)
+    .get('/getUserDetail/:userId', utils.validateToken, userController.getUserDetail)
+    .patch('/updateUserById', utils.validateToken, userController.updateUserById)
+    .post('/updatePassword', utils.validateToken, utils.verifyPassword, userController.updatePassword);
 
 module.exports = router;
