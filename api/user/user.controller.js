@@ -2,31 +2,41 @@ const User = require('./user.model');
 const utils = require('../../helpers/utils');
 module.exports = {
     newUser: (req, res) => {
-        let data = {
-            name: req.body.name,
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password,
-        };
-        let newUser = new User(data);
-        newUser.save((err, userInfo) => {
-            if (err) {
-                return res.json(err);
+        utils.isEmailExist(req.body.email)
+        .then(isEmailExist => {
+            if (isEmailExist) {
+                res.status(500).json({error: {code: 'ER_DUP_ENTRY', message: 'Email Already Exist'}});
             } else {
-                return res.json({'status': 200, 'userInfo': userInfo});
+                let data = {
+                    name: req.body.name,
+                    username: req.body.username,
+                    email: req.body.email,
+                    password: req.body.password,
+                };
+                let newUser = new User(data);
+                newUser.save((err, userInfo) => {
+                    if (err) {
+                        return res.json(err);
+                    } else {
+                        return res.json({'status': 200, 'userInfo': userInfo});
+                    }
+                });
             }
+        })
+        .catch(err => {
+            return res.json(err);
         });
     },
     getUserDetail: function(req, res) {
         let userId = req.params.userId;
         utils.getUserDetail(userId).then(userDetails => {
             console.log("user details ", userDetails); 
-            if (userDetails.length) {
-                delete userDetails[0].password;
+            if (Object.keys(userDetails).length) {
+                delete userDetails.password;
                 return res.status(201).json({
                 success: true,
                 message: 'successfully fetched',
-                userDetails: userDetails[0]
+                userDetails
             });
             } else {
                 return res.status(401).json('Not Authorized')

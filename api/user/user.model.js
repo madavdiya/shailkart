@@ -15,6 +15,7 @@ let UserSchema = new Schema({
         pin: {type:Number}
     },
     phone: {type:Number},
+    payments: [{type: Schema.ObjectId, ref: 'Payment', index: true}],
 });
 
 module.exports = mongoose.model('User', UserSchema);

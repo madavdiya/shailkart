@@ -1,6 +1,6 @@
 const User = require("../api/user/user.model");
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcryptjs');
 const dotenv = require('dotenv')
 dotenv.config()
 
@@ -23,18 +23,14 @@ function verifyAuth(req, res, next) {
 }
 
 function getUserByEmail(email) {
-    return User.find({
-        where: {
-            email
-        }
-    }).exec();
+    return User.findOne({email}).exec();
 }
 
 module.exports = {
     validateToken: (req, res, next) => {
-        const authorizationHeaader = req.headers.authorization;
+        const authorizationHeader = req.headers.authorization;
         let result;
-        if (authorizationHeaader) {
+        if (authorizationHeader) {
             verifyAuth(req, res, next);
         } else {
             result = {
@@ -69,16 +65,15 @@ module.exports = {
         } = req.body;
         getUserByEmail(email)
             .then(user => {
-                user = user[0];
-                if (user) {
+                if (user && Object.keys(user).length) {
                     bcrypt.compare(password, user.password).then(match => {
                         if (match) {
                             status = 200;
                             // Create a token
                             const payload = {
                                 email: user.email,
-                                id: user.id,
-                                name: user.full_name
+                                id: user._id,
+                                name: user.name
                             };
                             const options = {
                                 expiresIn: '2d'
@@ -112,9 +107,6 @@ module.exports = {
                 }
             })
             .catch(err => {
-                console.log({
-                    err
-                })
                 status = 500;
                 result.status = status;
                 result.error = err;
@@ -143,8 +135,7 @@ module.exports = {
         }
         getUserByEmail(email)
             .then(user => {
-                user = user[0];
-                if (user) {
+                if (user && Object.keys(user).length) {
                     bcrypt.compare(password, user.password).then(match => {
                         if (match) {
                             if (req.body.hasOwnProperty('confirmPassword')) {
@@ -161,7 +152,7 @@ module.exports = {
                                 next(new Error('Please provide confirm password'))
                             }
                         } else {
-                            next(error);
+                            next(new Error('please enter correct password'));
                         }
                     }).catch(err => {
                         next(err);
@@ -186,7 +177,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             getUserByEmail(email)
             .then(details => {
-                resolve(details.length);
+                resolve(details && Object.keys(details).length);
             })
             .catch(err =>{
                 reject(err);
@@ -194,6 +185,6 @@ module.exports = {
         })
     },
     updatePassword: (userId, password) => {
-        User.update({_id: userId}, {password}).exec();
+        return User.update({_id: userId}, {password}).exec();
     }
 };
