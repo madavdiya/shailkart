@@ -1,41 +1,39 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
-import './login.scss';
-import jwt from 'jsonwebtoken'
 import axios from '../../services/axios';
 import Cookies from 'universal-cookie';
-import {toast} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import {environment} from '../../environment';
+import './signup.scss';
+import { toast} from 'react-toastify';
+import { environment } from '../../environment';
 const cookies = new Cookies();
 
-class Login extends Component {
+class SignUp extends Component {
     state = {
         email: '',
         password: '',
+        name: '',
         redirect: cookies.get('token')
             ? true
             : false
     }
 
-    handleLoginClick = (e) => {
+    handleSignupClick = (e) => {
         e.preventDefault()
-        if (this.state.email && this.state.password) {
+        if (this.state.email && this.state.password && this.state.name) {
+
             axios
-                .post(`${environment.baseUrl}/api/user/login`, {
+                .post(`${environment.baseUrl}/api/user/createUser`, {
+                "name": this.state.name,
                 "email": this.state.email,
                 "password": this.state.password
             })
                 .then((response) => {
-                    cookies.set('token', response.data.token, {path: '/'})
-                    let data = jwt.decode(response.data.token);
-                    for (let key in data) {
-                        cookies.set(key.toString(), data[key], {path: '/'})
-                    }
-                    this.setState({redirect: true})
+                    toast.success('Successfully signed up :)', {position: toast.POSITION.BOTTOM_RIGHT});
+                    this.setState({name: '', email: '', password: ''});
+                    this.forceUpdate();
                 })
                 .catch((error) => {
-                    toast.error('Email or Password does not exist', {position: toast.POSITION.BOTTOM_RIGHT});
+                    toast.error('Email is already exist', {position: toast.POSITION.BOTTOM_RIGHT});
                 });
         }
 
@@ -52,7 +50,13 @@ class Login extends Component {
         let elem = document.getElementById('email')
         this.validate(elem, event)
     }
-    
+
+    handleNameChange = (event) => {
+        this.setState({name: event.target.value});
+        let elem = document.getElementById('name')
+        this.validate(elem, event)
+    }
+
     validate(elem, event) {
         if (!event.target.value) {
             if (!elem.classList.contains('input-danger')) {
@@ -69,36 +73,52 @@ class Login extends Component {
         }
     }
 
-    goToSignup = () => {
+        goToLogin = () => {
         this
             .props
             .history
-            .push(`/signup`);
+            .push(`/login`);
     }
 
 
+
+    componentWillMount() {}
+
     render() {
-         if (this.state.redirect) {
-            return (<Redirect to={'/'}/>)
+        if (this.state.redirect) {
+            return (<Redirect to={'/home'}/>)
         }
         return (
             <div className="login-page">
                 <div className="container">
                     <div className="row">
+                        <div className="go-to-login" onClick={this.goToLogin}>
+                            <i className="fa fa-arrow-left"></i>
+                        </div>
                         <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
                             <div className="card card-signin my-5">
                                 <div className="card-body">
-                                    <h5 className="card-title text-center">Sign In</h5>
+                                    <h5 className="card-title text-center">Sign Up</h5>
                                     <form className="form-signin">
+                                        <div className="pd-bt-25">
+                                            <input
+                                                type="text"
+                                                id="name"
+                                                className="form-control"
+                                                placeholder="* Full Name"
+                                                onChange={this.handleNameChange}
+                                                required
+                                                autoFocus/>
+                                        </div>
+
                                         <div className="pd-bt-25">
                                             <input
                                                 type="email"
                                                 id="email"
                                                 className="form-control"
-                                                placeholder="Email address"
+                                                placeholder="* Email address"
                                                 onChange={this.handleEmailChange}
-                                                required
-                                                autoFocus/>
+                                                required/>
                                         </div>
 
                                         <div className="pd-bt-25">
@@ -106,19 +126,20 @@ class Login extends Component {
                                                 type="password"
                                                 id="password"
                                                 className="form-control"
-                                                placeholder="Password"
+                                                placeholder="* Password"
                                                 onChange={this.handlePasswordChange}
                                                 required/>
                                         </div>
+                                        {this.state.name && this.state.password && this.state.email
+                                            ? <button
+                                                    className="btn btn-lg btn-signup btn-block text-uppercase"
+                                                    type="submit"
+                                                    onClick={this.handleSignupClick}>Signup</button>
+                                            : <button className="btn btn-lg btn-dark btn-block text-uppercase" type="submit">Signup</button>
+                                        }
 
-                                        <button
-                                            className="btn btn-lg btn-block text-uppercase"
-                                            type="submit"
-                                            onClick={this.handleLoginClick}>Sign in</button>
-                                        <hr className="my-4"/>
-                                        <div className="or-option">OR</div>
-                                        <button className="btn btn-lg btn-block text-uppercase" onClick={this.goToSignup}>Signup</button>
                                     </form>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -129,4 +150,4 @@ class Login extends Component {
     }
 }
 
-export default Login
+export default SignUp

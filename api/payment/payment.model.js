@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 let PaymentSchema = new Schema({
-    transations: { type: Object },
+    transaction: Schema.Types.Mixed,
     user: {type: Schema.ObjectId, ref: 'User', index: true},
 });
 

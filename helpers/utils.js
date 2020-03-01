@@ -65,6 +65,7 @@ module.exports = {
         } = req.body;
         getUserByEmail(email)
             .then(user => {
+                console.log('.....', user)
                 if (user && Object.keys(user).length) {
                     bcrypt.compare(password, user.password).then(match => {
                         if (match) {
@@ -166,7 +167,7 @@ module.exports = {
             });
     },
     getUserDetail: (userId) => {
-        return User.findById(userId).exec();
+        return User.findById(userId).populate('payments').exec();
     },
     updateUserById: (userId, reqBody) => {
         return User.update({

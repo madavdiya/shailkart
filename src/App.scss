@@ -1,6 +1,126 @@
-@import './assets/stylesheets/variables';
 @import url('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.App {
+    text-align: center;
+}
+
+.App-logo {
+    height: 40vmin;
+}
+
+.App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.App-link {
+    color: #09d3ac;
+}
+
+textarea:hover,
+input:hover,
+textarea:active,
+input:active,
+textarea:focus,
+input:focus,
+button:focus,
+button:active,
+button:hover,
+label:focus,
+.btn:active,
+.btn.active {
+    outline: 0px !important;
+    -webkit-appearance: none;
+    box-shadow: none !important;
+}
+
+.mr-50 {
+    margin-right: 50px;
+}
+
+.mr-25 {
+    margin-right: 25px;
+}
+
+.height-90 {
+    height: 90px;
+}
+
+.navbar {
+    box-shadow: unset;
+    -webkit-box-shadow: unset;
+    -moz-box-shadow: unset;
+}
+
+input {
+    outline: 0;
+    border-width: 0 0 1px !important;
+    border-color: #f7af00 !important;
+    background-color: transparent !important;
+}
+
+input:focus {
+    border-color: green !important;
+}
+
+.form-control:focus,
+.form-control {
+    border-radius: 0px !important;
+    box-shadow: none !important;
+}
+
+.form-group {
+    margin-top: 20px;
+    margin-bottom: 0px;
+}
+
+.pd-tp-15 {
+    padding-top: 15px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.danger {
+    color: red;
+    font-weight: bold;
+}
+
+.pd-bt-25 {
+    padding-bottom: 25px;
+}
+
+.hidden {
+    display: none;
+}
+
+.btn-primary {
+    margin-left: 0px !important;
+}
+
+.in-progress {
+    margin-left: 15px !important;
+}
+
+.mg-tp-15 {
+    margin-top: 15px;
 }

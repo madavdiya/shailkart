@@ -1,24 +1,27 @@
 import React, {Component} from 'react'
-import {withRouter, Link} from 'react-router-dom'
+import {Redirect, withRouter} from 'react-router-dom'
 import './navbar.scss'
-import * as Cookies from "js-cookie";
+import Cookies from 'universal-cookie';
+import {connect} from 'react-redux';
+const cookies = new Cookies();
 
 class Navbar extends Component {
+    
     constructor(props) {
         super(props);
         this.state = {
-            auth: true,
+            name: cookies.get('name'),
         };
     }
-    componentDidMount() {
-        if (!Cookies.get('token')) {
-            this.setState({auth: false});
-        }
-    }
-
     signOut = () => {
-        // cookies.remove('token'); if (cookies.get('token')) { cookies.remove('token');
-        // } this     .props     .history     .push(`/`);
+        cookies.remove('token');
+        if (cookies.get('token')) {
+            cookies.remove('token');
+        }
+        this
+            .props
+            .history
+            .push(`/login`);
     }
 
     goToPath = (path) => {
@@ -28,26 +31,54 @@ class Navbar extends Component {
             .push(`${path}`);
     }
 
-    searchOption = (e) => {
-        this.setState({searchOption: e.target.value});
-    }
-
     render() {
-
+        console.log(this.props.addToCartItem, '.....')
         return (
-            <header className="navbar">
-                <div onClick={() => this.goToPath('/')} className="home-link router-link-exact-active router-link-active cursor-pointer">
-                    <span className="site-name">ShailKart</span>
-                </div>
-                <div className="links" style={{maxWidth: '1312px'}}>
-                    
-                    <nav className="nav-links">
-                        <div className="nav-item cursor-pointer"><div onClick={() => this.goToPath('/login')} className="nav-link">Login</div></div>
-                    </nav>
-                </div>
-            </header>
+            <div>
+                <nav className="navbar navbar-fixed-top navbar-expand-lg height-90">
+                    <div className="navbar-brand cursor-pointer" onClick={() => this.goToPath('/')}>
+                        ShailKart</div>
+                    <div className="collapse navbar-collapse" id="navbarNavDropdown">
+                        <ul className="navbar-nav ml-auto">
+                            {cookies.get('token')
+                                ? <li className="nav-item dropdown mr-25">
+                                        <a
+                                            href="true"
+                                            className="shailkart-link nav-link dropdown-toggle cursor-pointer"
+                                            id="navbarDropdownMenuLink"
+                                            role="button"
+                                            data-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false">
+                                            Settings
+                                        </a>
+                                        <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            <div
+                                                className="dropdown-item cursor-pointer"
+                                                onClick={() => this.goToPath(`/profile`)}>Profile</div>
+                                            <div className="dropdown-item cursor-pointer" onClick={this.signOut}>Logout</div>
+                                        </div>
+                                    </li>
+                                : <li className="nav-item mr-25">
+                                    <div
+                                        className="shailkart-link login-btn"
+                                        onClick={() => this.goToPath('login')}>Login</div>
+                                </li>}
+
+                            <li className="nav-item mr-50">
+                                <i className="shopping-cart-icon fa fa-shopping-cart" aria-hidden="true"></i>
+                               {cookies.get('token') && <span className="cartitem-count">{this.props.addToCartItem}</span>}
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
         )
     }
 }
-
-export default withRouter(Navbar);
+const mapStateToProps = (state) => {
+    return {
+        addToCartItem: state.addToCartItem
+    }
+}
+export default connect(mapStateToProps)(withRouter(Navbar));
