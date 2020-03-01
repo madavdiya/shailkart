@@ -6,6 +6,8 @@ const LoginComponent = (lazy(() => (import ('./components/login/login'))));
 const HomeComponent = (lazy(() => (import ('./components/home/home'))));
 const Navbar = (lazy(() => (import ('./components/navbar/navbar'))));
 const SignUpComponent = (lazy(() => (import ('./components/signup/signup'))));
+const CartComponent = (lazy(() => (import ('./components/cart/cart'))));
+const ProfileComponent = (lazy(() => (import ('./components/profile/profile'))));
 
 let component = () => {
     return (
@@ -14,7 +16,8 @@ let component = () => {
             <Suspense fallback={<div>Loading...</div>}>
                 <Switch>
                     <Route path='/' component={HomeComponent} exact/>
-                    {/* <Route path='/' component={requireAuth(HomeComponent)} exact/> */}
+                    <Route path='/cart' component={CartComponent} exact/>
+                    <Route path='/profile' component={ProfileComponent} exact/>
                 </Switch>
             </Suspense>
         </div>

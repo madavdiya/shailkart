@@ -15,7 +15,11 @@ class Login extends Component {
         password: '',
         redirect: cookies.get('token')
             ? true
-            : false
+            : false,
+        forgotPassword: false,
+        forgotPasswordEmail: '',
+        forgotPasswordInput: '',
+        forgotConfirmPasswordInput: ''
     }
 
     handleLoginClick = (e) => {
@@ -52,7 +56,25 @@ class Login extends Component {
         let elem = document.getElementById('email')
         this.validate(elem, event)
     }
-    
+
+    handleForgotEmailChange = (event) => {
+        this.setState({forgotPasswordEmail: event.target.value});
+        let elem = document.getElementById('forgot-email')
+        this.validate(elem, event)
+    }
+
+    handleForgotPasswordChange = (event) => {
+        this.setState({forgotPasswordInput: event.target.value});
+        let elem = document.getElementById('forgot-password')
+        this.validate(elem, event)
+    }
+
+    handleForgotConfirmPasswordChange = (event) => {
+        this.setState({forgotConfirmPasswordInput: event.target.value});
+        let elem = document.getElementById('confirm-password')
+        this.validate(elem, event)
+    }
+
     validate(elem, event) {
         if (!event.target.value) {
             if (!elem.classList.contains('input-danger')) {
@@ -69,6 +91,13 @@ class Login extends Component {
         }
     }
 
+    handleClose = () => {
+        this.setState({
+            ...this.state,
+            forgotPassword: !this.state.forgotPassword
+        })
+    }
+
     goToSignup = () => {
         this
             .props
@@ -76,9 +105,29 @@ class Login extends Component {
             .push(`/signup`);
     }
 
+    checkForgotPassword = () => {
+        if (this.state.forgotPasswordEmail && this.state.forgotPasswordInput && this.state.forgotConfirmPasswordInput) {
+            axios
+                .post(`${environment.baseUrl}/api/user/updatePassword`, {
+                email: this.state.forgotPasswordEmail,
+                password: this.state.forgotPasswordInput,
+                confirmPassword: this.state.forgotConfirmPasswordInput
+            })
+                .then(() => {
+                    toast.success("Password changed successfully", {position: toast.POSITION.BOTTOM_RIGHT});
+                    this.setState({forgotPasswordEmail: '', forgotPasswordInput: '', forgotConfirmPasswordInput: ''});
+                    this.handleClose();
+                })
+                .catch(err => {
+                    console.log({err})
+                    toast.error(err.response.data.statusText, {position: toast.POSITION.BOTTOM_RIGHT})
+                })
+        }
+    }
 
     render() {
-         if (this.state.redirect) {
+        console.log(this.state);
+        if (this.state.redirect) {
             return (<Redirect to={'/'}/>)
         }
         return (
@@ -97,6 +146,7 @@ class Login extends Component {
                                                 className="form-control"
                                                 placeholder="Email address"
                                                 onChange={this.handleEmailChange}
+                                                autoComplete="email"
                                                 required
                                                 autoFocus/>
                                         </div>
@@ -112,17 +162,70 @@ class Login extends Component {
                                         </div>
 
                                         <button
-                                            className="btn btn-lg btn-block text-uppercase"
+                                            className={`btn btn-lg btn-block text-uppercase`}
                                             type="submit"
                                             onClick={this.handleLoginClick}>Sign in</button>
+                                        <div className="forgot-password" onClick={this.handleClose}>
+                                            Forgot password?
+                                        </div>
                                         <hr className="my-4"/>
                                         <div className="or-option">OR</div>
-                                        <button className="btn btn-lg btn-block text-uppercase" onClick={this.goToSignup}>Signup</button>
+                                        <button
+                                            className="btn btn-lg btn-block text-uppercase"
+                                            onClick={this.goToSignup}>Signup</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div
+                    className={this.state.forgotPassword
+                    ? "modal display-block"
+                    : "modal display-none"}>
+                    <section className="modal-main">
+                        <div className="close-modal">
+                            <i onClick={this.handleClose} className="fa fa-times fa-2x"></i>
+                        </div>
+
+                        <div>
+                            <div className="pd-bt-25">
+                                <input
+                                    type="email"
+                                    id="forgot-email"
+                                    className="form-control"
+                                    placeholder="Email address"
+                                    onChange={this.handleForgotEmailChange}
+                                    required
+                                    autoFocus/>
+                            </div>
+
+                            <div className="pd-bt-25">
+                                <input
+                                    type="password"
+                                    id="forgot-password"
+                                    className="form-control"
+                                    placeholder="Password"
+                                    onChange={this.handleForgotPasswordChange}
+                                    required/>
+                            </div>
+                            <div className="pd-bt-25">
+                                <input
+                                    type="password"
+                                    id="confirm-password"
+                                    className="form-control"
+                                    placeholder="Confirm Password"
+                                    onChange={this.handleForgotConfirmPasswordChange}
+                                    required/>
+                            </div>
+                            <button
+                                className={`btn btn-lg btn-block text-uppercase ${this.state.forgotPasswordEmail.length && this.state.forgotPasswordInput.length && this.state.forgotConfirmPasswordInput.length
+                                ? ''
+                                : 'disabled'}`}
+                                type="submit"
+                                onClick={this.checkForgotPassword}>Submit</button>
+                        </div>
+                    </section>
                 </div>
             </div>
         )

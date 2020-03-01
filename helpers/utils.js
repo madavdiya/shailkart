@@ -23,7 +23,9 @@ function verifyAuth(req, res, next) {
 }
 
 function getUserByEmail(email) {
-    return User.findOne({email}).exec();
+    return User.findOne({
+        email
+    }).exec();
 }
 
 module.exports = {
@@ -65,7 +67,6 @@ module.exports = {
         } = req.body;
         getUserByEmail(email)
             .then(user => {
-                console.log('.....', user)
                 if (user && Object.keys(user).length) {
                     bcrypt.compare(password, user.password).then(match => {
                         if (match) {
@@ -82,7 +83,6 @@ module.exports = {
                             const secret = process.env.JWT_SECRET;
                             const token = jwt.sign(payload, secret, options);
 
-                            // console.log('TOKEN', token);
                             result.token = token;
                             result.status = status;
                             // delete password as we don't need to send it to browser
@@ -128,46 +128,54 @@ module.exports = {
         }
     },
     verifyPassword: (req, res, next) => {
-        const email = req.decoded.email;
+        console.log('...ddasdasdsadsdsdsad');
+        const email = req.body.email;
         const password = req.body.password;
+        console.log({
+            email,
+            password
+        });
         const error = {
-            status: 401,
-            message: 'UNAUTHORIZED'
+            status: 500,
+            statusText: ''
         }
         getUserByEmail(email)
             .then(user => {
+                console.log(user, email);
                 if (user && Object.keys(user).length) {
-                    bcrypt.compare(password, user.password).then(match => {
-                        if (match) {
-                            if (req.body.hasOwnProperty('confirmPassword')) {
-                                bcrypt.hash(req.body.confirmPassword, +process.env.saltingRounds, function (err, hash) {
-                                    if (err) {
-                                        console.log('Error hashing password for user', user.name);
-                                        next(err);
-                                    } else {
-                                        req.body.confirmPassword = hash;
-                                        next();
-                                    }
-                                });
+                    if (req.body.hasOwnProperty('confirmPassword') && req.body.confirmPassword.length) {
+                        bcrypt.hash(req.body.confirmPassword, +process.env.saltingRounds, function (err, hash) {
+                            if (err) {
+                                console.log('Error hashing password for user', user.name);
+                                next(err);
                             } else {
-                                next(new Error('Please provide confirm password'))
+                                req.body.confirmPassword = hash;
+                                req.body.user = user;
+                                next();
                             }
-                        } else {
-                            next(new Error('please enter correct password'));
-                        }
-                    }).catch(err => {
-                        next(err);
-                    });
+                        });
+                    } else {
+                        error.statusText = 'Please provide confirm password';
+                        res.status(500).send(error);
+                    }
+
                 } else {
-                    next(error);
+                    res.status(404).send({
+                        status: 404,
+                        statusText: "Email not found"
+                    });
                 }
             })
             .catch(err => {
-                next(err);
+                res.status(500).send(err);
             });
     },
-    getUserDetail: (userId) => {
-        return User.findById(userId).populate('payments').exec();
+    getUserDetail: (_id) => {
+        return User.findOne({
+            _id
+        }, {
+            password: 0
+        }).populate('payments').exec();
     },
     updateUserById: (userId, reqBody) => {
         return User.update({
@@ -177,15 +185,19 @@ module.exports = {
     isEmailExist: (email) => {
         return new Promise((resolve, reject) => {
             getUserByEmail(email)
-            .then(details => {
-                resolve(details && Object.keys(details).length);
-            })
-            .catch(err =>{
-                reject(err);
-            })
+                .then(details => {
+                    resolve(details && Object.keys(details).length);
+                })
+                .catch(err => {
+                    reject(err);
+                })
         })
     },
     updatePassword: (userId, password) => {
-        return User.update({_id: userId}, {password}).exec();
+        return User.update({
+            _id: userId
+        }, {
+            password
+        }).exec();
     }
 };

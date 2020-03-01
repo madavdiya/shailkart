@@ -11,12 +11,13 @@
   padding-top: 1rem;
   background: #f7f02e;
   border-bottom: 1px solid #eee;
+  height: 60px;
 }
 
 .dropdown-item.active,
 .dropdown-item:active {
   background-color: unset;
-  color: black
+  color: black;
 }
 
 .dropdown-item:hover {
@@ -76,4 +77,12 @@
   position: relative;
   top: 8px;
   cursor: pointer;
+}
+
+.cartitem-count {
+  padding: 0.5em 0.5em;
+  cursor: pointer;
+  position: relative;
+  top: 8px;
+
 }

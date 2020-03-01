@@ -1,0 +1,155 @@
+.cart-container {
+    height: calc(100vh - 60px);
+    overflow: auto;
+}
+
+.cart-box {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    height: inherit;
+    background: whitesmoke;
+
+    .cart-list-box {
+        margin: 2em 1em 2em 3em;
+
+        .cart-text {
+            padding-bottom: 0.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+            font-size: 42px;
+            border-bottom: 1px solid gainsboro;
+            font-family: 'Open Sans'sans-serif;
+        }
+
+        .cart-lists {
+            margin-top: 1em;
+            overflow: auto;
+            height: calc(100vh - 218px);
+
+            .cart-list {
+                display: grid;
+                grid-template-columns: 20% 21% 21% 22% 7.5%;
+                grid-gap: 20px;
+                margin-top: 50px;
+                text-align: center;
+
+                .cart-image {
+                    padding: 0;
+                    margin: 0;
+                    height: 220px;
+                    width: 100%;
+                    display: block;
+                    border-top-left-radius: 10px;
+                    border-top-right-radius: 10px;
+                    background-size: cover;
+                }
+
+                .cart-name {
+                    letter-spacing: 2px;
+                    font-weight: bold;
+                    color: #333;
+                    font-size: 14px;
+                    padding-top: 20px;
+                }
+
+                .cart-price {
+                    color: #776f6f;
+                    font-weight: bold;
+                    padding-top: 20px;
+                    font-size: 17px;
+                    letter-spacing: 0.5px;
+                    font-weight: bold;
+                }
+
+                .cart-quantity {
+                    padding-top: 20px;
+                    color: #776f6f;
+                    font-size: 14px;
+                    letter-spacing: 0.5px;
+
+                    span.quantity {
+                        padding: 5px 25px;
+                        background: #e8e8e8;
+                        border-radius: 5px;
+                        color: black;
+                        font-weight: bold;
+                        font-size: 14px;
+                        margin-left: 10px;
+                        margin-right: 10px;
+                    }
+
+                    i.fa.fa-minus.disabled {
+                        opacity: 0.4;
+                        pointer-events: none;
+                    }
+                }
+            }
+        }
+    }
+
+    .checkout-box {
+        background: #e8e8e8;
+        padding: 3.5em 2em 1em;
+
+        .summary {
+            letter-spacing: 1px;
+            font-weight: bold;
+            color: #333;
+            font-size: 20px;
+            text-transform: uppercase;
+        }
+
+        .order-detail {
+            padding-top: 1em;
+
+            table {
+                width: 100%;
+
+                .item-desc {
+                    td {
+                        font-size: 16px;
+                        padding: 10px;
+                        color: #343434;
+                    }
+                }
+
+                .item-desc-final {
+                    td {
+                        font-size: 20px;
+                        padding: 10px;
+                        color: #343434;
+                        font-weight: bold;
+                    }
+
+                    td:nth-child(2) {
+                        font-size: 25px;
+                    }
+                }
+            }
+
+            .checkout-btn {
+                padding-top: 20px;
+
+                .btn {
+                    padding: 0.9rem;
+                    width: 100%;
+                    font-weight: bold;
+                    background: #f7f04e;
+                    font-size: 15px;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                }
+
+                .disabled-checkout {
+                    background: #545454;
+                    color: white;
+                    opacity: 0.8;
+                    pointer-events: none;
+                }
+            }
+        }
+    }
+}

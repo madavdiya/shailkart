@@ -28,11 +28,9 @@ module.exports = {
         });
     },
     getUserDetail: function(req, res) {
-        let userId = req.params.userId;
+        let userId = req.decoded.id;
         utils.getUserDetail(userId).then(userDetails => {
-            console.log("user details ", userDetails); 
             if (Object.keys(userDetails).length) {
-                delete userDetails.password;
                 return res.status(201).json({
                 success: true,
                 message: 'successfully fetched',
@@ -79,7 +77,8 @@ module.exports = {
     },
 
     updatePassword: function(req, res) {
-        const userId = req.decoded.id;
+        const userId = req.body.user.id;
+        console.log('updating password');
         const confirmPassword = req.body.confirmPassword;
         utils.updatePassword(userId, confirmPassword).then(() => {
             return res.status(201).json({

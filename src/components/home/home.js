@@ -4,6 +4,8 @@ import Cookies from 'universal-cookie';
 import axios from '../../services/axios';
 import {environment} from '../../environment';
 import {connect} from 'react-redux';
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const Cookie = new Cookies();
 
 class Home extends Component {
@@ -23,16 +25,21 @@ class Home extends Component {
         }
     }
 
+    showToast = (type) => {
+        if (type === 'success') {
+            toast.success("Added to the cart", {position: toast.POSITION.BOTTOM_RIGHT});
+        }
+    }
+
     fetchProducts() {
         if (this.state.products.length < this.state.maxLimit || this.state.checkFirstTime) {
+            console.log(this.state);
+
             axios
                 .get(`${environment.baseUrl}/api/product/productList?skip=${this.state.skip}`)
                 .then(result => {
-                    result.data.products.forEach(product => {
-                        product.addedToCart = Cookie.get(product._id) ? true: false;
-                    }) 
-                    console.log(result.data.products)
                     this.setState({maxLimit: result.data.count, products: [...this.state.products, ...result.data.products], checkFirstTime: false});
+                    this.setState({skip: this.state.products.length});
                 })
                 .catch(err => {
                     console.log({err});
@@ -44,8 +51,8 @@ class Home extends Component {
 
     handleScroll = (e) => {
         const {offsetHeight, scrollTop, scrollHeight} = e.target
+        console.log(offsetHeight + scrollTop, scrollHeight)
         if (offsetHeight + scrollTop === scrollHeight) {
-            this.setState({skip: this.state.products.length});
             this.fetchProducts();
         }
     }
@@ -53,7 +60,7 @@ class Home extends Component {
     render() {
         const {products} = this.state;
         return (
-            <div className="home-container">
+            <div className="child-container">
                 {this.state.auth
                     ? <div className="product-container" onScroll={this.handleScroll}>
                             <div className="products-list row">
@@ -67,7 +74,7 @@ class Home extends Component {
                                                     <div className="card-actions">
                                                             
                                                             <span className="card-action">
-                                                                <button className="btn btn-xs btn-circle btn-cart-primary" data-toggle="button" onClick={() => this.props.addToCart(list)}>
+                                                                <button className="btn btn-xs btn-circle btn-cart-primary" data-toggle="button" onClick={() => {this.props.addToCart(list); this.showToast('success')}}>
                                                                 <i className="fa fa-shopping-cart"></i>
                                                                 </button>
                                                             </span>
@@ -87,7 +94,7 @@ class Home extends Component {
                                                     </div>
                                                     
                                                 </div>
-                                                <div className="add-to-cart" onClick={() => this.props.addToCart(list)}>Add to cart</div>
+                                                <div className="add-to-cart" onClick={() => {this.props.addToCart(list); this.showToast('success')}}>Add to cart</div>
                                             </div>
                                         </div>
                                     
@@ -124,7 +131,8 @@ const mapDispatchToProps = (dispatch) => {
                 cartItems[list._id] = list;
             }
             Cookie.set('cartItems', cartItems);
-            Cookie.set('totalCartItem', (parseInt(Cookie.get('totalCartItem')) + 1))
+            Cookie.set('totalCartItem', (parseInt(Cookie.get('totalCartItem')) + 1));
+            dispatch({type: 'SET_CART_ITEMS', payload: cartItems});
             dispatch({type: 'INCREMENT'})
         },
     }

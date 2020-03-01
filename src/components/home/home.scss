@@ -1,10 +1,6 @@
-.home-container {
-    margin-top: 90px;
-}
-
 .product-container {
     padding: 10px 50px;
-    height: calc(100vh - 90px);
+    height: calc(100vh - 60px);
     overflow: auto;
     background: #e2e1e0;
 }
@@ -42,10 +38,15 @@
         margin-right: 23px;
         transition: width 500ms ease-in-out;
         z-index: 1;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12),
-            0 1px 2px rgba(0, 0, 0, 0.24);
-        transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         background: #fff;
+        opacity: 0.8;
+    }
+
+    .products:hover {
+        opacity: 1;
+        cursor: pointer;
     }
 
     .product-content {
@@ -61,7 +62,6 @@
             color: #333;
             letter-spacing: 0.3px;
             padding-left: 10px;
-
         }
     }
 }
@@ -89,12 +89,12 @@
 }
 
 .card-actions .card-action+.card-action {
-    margin-left: .5rem;
+    margin-left: 0.5rem;
 }
 
 .card-actions .card-action:nth-child(3) {
-    -webkit-transition-delay: .15s;
-    transition-delay: .15s;
+    -webkit-transition-delay: 0.15s;
+    transition-delay: 0.15s;
 }
 
 .card-actions .card-action {
@@ -103,10 +103,10 @@
     right: 0;
     left: 0;
     opacity: 0;
-    -webkit-transform: translateY(.5rem);
-    transform: translateY(.5rem);
-    -webkit-transition: all .1s ease-in-out;
-    transition: all .1s ease-in-out;
+    -webkit-transform: translateY(0.5rem);
+    transform: translateY(0.5rem);
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
     transition-property: -webkit-transform, transform, opacity;
 }
 
@@ -143,8 +143,8 @@
 
 .btn-xs {
     height: calc(1.40625rem + 1rem + 2px);
-    padding: .5rem .75rem;
-    font-size: .9375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9375rem;
 }
 
 .add-to-cart {
@@ -158,10 +158,10 @@
     /* border-radius: 50em; */
     text-transform: uppercase;
     font-weight: 700;
-    letter-spacing: .1em;
+    letter-spacing: 0.1em;
     text-decoration: none;
-    font-size: .73333em;
-    transition: all .2s;
+    font-size: 0.73333em;
+    transition: all 0.2s;
     margin-top: 0.5em;
     cursor: pointer;
 }

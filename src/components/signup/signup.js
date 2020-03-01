@@ -130,12 +130,12 @@ class SignUp extends Component {
                                                 onChange={this.handlePasswordChange}
                                                 required/>
                                         </div>
-                                        {this.state.name && this.state.password && this.state.email
+                                        {this.state.name.length && this.state.password.length && this.state.email.length
                                             ? <button
                                                     className="btn btn-lg btn-signup btn-block text-uppercase"
                                                     type="submit"
                                                     onClick={this.handleSignupClick}>Signup</button>
-                                            : <button className="btn btn-lg btn-dark btn-block text-uppercase" type="submit">Signup</button>
+                                            : <button className="btn disabled btn-lg btn-block text-uppercase" type="submit">Signup</button>
                                         }
 
                                     </form>

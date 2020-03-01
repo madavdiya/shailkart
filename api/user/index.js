@@ -5,8 +5,8 @@ const router = express.Router();
 
 router.post('/login', utils.verifyLogin)
     .post('/createUser', utils.bycryptPassword, userController.newUser)
-    .get('/getUserDetail/:userId', utils.validateToken, userController.getUserDetail)
+    .get('/getUserDetail', utils.validateToken, userController.getUserDetail)
     .patch('/updateUserById', utils.validateToken, userController.updateUserById)
-    .post('/updatePassword', utils.validateToken, utils.verifyPassword, userController.updatePassword);
+    .post('/updatePassword', utils.verifyPassword, userController.updatePassword);
 
 module.exports = router;

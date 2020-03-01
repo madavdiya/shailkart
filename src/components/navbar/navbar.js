@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Redirect, withRouter} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 import './navbar.scss'
 import Cookies from 'universal-cookie';
 import {connect} from 'react-redux';
@@ -15,9 +15,12 @@ class Navbar extends Component {
     }
     signOut = () => {
         cookies.remove('token');
+        cookies.remove('cartItems');
+        cookies.remove('totalCartItem');
         if (cookies.get('token')) {
             cookies.remove('token');
         }
+        this.props.setCartItem({});
         this
             .props
             .history
@@ -35,7 +38,7 @@ class Navbar extends Component {
         console.log(this.props.addToCartItem, '.....')
         return (
             <div>
-                <nav className="navbar navbar-fixed-top navbar-expand-lg height-90">
+                <nav className="navbar navbar-fixed-top navbar-expand-lg">
                     <div className="navbar-brand cursor-pointer" onClick={() => this.goToPath('/')}>
                         ShailKart</div>
                     <div className="collapse navbar-collapse" id="navbarNavDropdown">
@@ -65,10 +68,10 @@ class Navbar extends Component {
                                         onClick={() => this.goToPath('login')}>Login</div>
                                 </li>}
 
-                            <li className="nav-item mr-50">
+                            <li className="nav-item mr-20">
                                 <i className="shopping-cart-icon fa fa-shopping-cart" aria-hidden="true"></i>
-                               {cookies.get('token') && <span className="cartitem-count">{this.props.addToCartItem}</span>}
                             </li>
+                            {cookies.get('token') &&<li className="nav-item mr-40"> <span className="badge badge-primary cartitem-count" onClick={() => this.goToPath('/cart')}>{this.props.addToCartItem}</span></li>}
                         </ul>
                     </div>
                 </nav>
@@ -81,4 +84,13 @@ const mapStateToProps = (state) => {
         addToCartItem: state.addToCartItem
     }
 }
-export default connect(mapStateToProps)(withRouter(Navbar));
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setCartItem: (list) => {
+            console.log({list})
+            dispatch({type: 'SET_CART_ITEMS', payload: list, cartItemsReset: true});
+        },
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Navbar));

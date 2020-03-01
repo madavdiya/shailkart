@@ -17,3 +17,14 @@
         cursor: pointer;
     }
 }
+
+.btn {
+    font-size: 80%;
+    border-radius: 0;
+    letter-spacing: 0.1rem;
+    font-weight: bold;
+    padding: 1rem;
+    transition: all 0.2s;
+    color: black;
+    background: #f7ee4e;
+}
