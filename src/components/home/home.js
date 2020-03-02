@@ -33,8 +33,6 @@ class Home extends Component {
 
     fetchProducts() {
         if (this.state.products.length < this.state.maxLimit || this.state.checkFirstTime) {
-            console.log(this.state);
-
             axios
                 .get(`${environment.baseUrl}/api/product/productList?skip=${this.state.skip}`)
                 .then(result => {
@@ -44,14 +42,11 @@ class Home extends Component {
                 .catch(err => {
                     console.log({err});
                 });
-        } else {
-            console.log('no data to scroll now');
         }
     }
 
     handleScroll = (e) => {
         const {offsetHeight, scrollTop, scrollHeight} = e.target
-        console.log(offsetHeight + scrollTop, scrollHeight)
         if (offsetHeight + scrollTop === scrollHeight) {
             this.fetchProducts();
         }
@@ -112,7 +107,6 @@ class Home extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    console.log(dispatch);
     return {
         addToCart: (list) => {
             if (!Cookie.get('cartItems')) {
@@ -123,10 +117,8 @@ const mapDispatchToProps = (dispatch) => {
             }
             let cartItems = Cookie.get('cartItems');
             if (cartItems.hasOwnProperty(list._id)) {
-                console.log('no no no');
                 cartItems[list._id].count = cartItems[list._id].count + 1;
             } else {
-                console.log('yes yes');
                 list.count = 1;
                 cartItems[list._id] = list;
             }

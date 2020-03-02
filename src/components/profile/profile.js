@@ -25,7 +25,6 @@ class Profile extends Component {
                         return payment.hasOwnProperty('transaction');
                     })
                     this.setState({user: res.data.userDetails});
-                    console.log({res});
                 })
                 .catch(err => {
                     console.log({err});

@@ -35,7 +35,6 @@ class Navbar extends Component {
     }
 
     render() {
-        console.log(this.props.addToCartItem, '.....')
         return (
             <div>
                 <nav className="navbar navbar-fixed-top navbar-expand-lg">
@@ -88,7 +87,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         setCartItem: (list) => {
-            console.log({list})
             dispatch({type: 'SET_CART_ITEMS', payload: list, cartItemsReset: true});
         },
     }

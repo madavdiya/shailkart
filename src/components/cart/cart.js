@@ -15,7 +15,6 @@ class Cart extends Component {
     }
 
     static getDerivedStateFromProps(props, state) {
-        console.log({props, state});
         let totalPrice = 0;
         let totalCount = 0;
         props
@@ -180,7 +179,6 @@ const mapDispatchToProps = (dispatch) => {
             let cartItems = Cookie.get('cartItems');
             if (cartItems.hasOwnProperty(list._id)) {
                 let count = cartItems[list._id].count - 1;
-                console.log(count);
                 if (1 <= count) {
                     cartItems[list._id].count = cartItems[list._id].count - 1;
                     Cookie.set('cartItems', cartItems);
@@ -191,11 +189,9 @@ const mapDispatchToProps = (dispatch) => {
             }
         },
         SetCartItems: (list) => {
-            console.log('SetCartItemsSetCartItemsSetCartItems');
             dispatch({type: 'SET_CART_ITEMS', payload: list});
         },
         setTotalCartItem: (value) => {
-            console.log('SetCartItemsdsadasdadadas dadas dadas ddasdas')
             dispatch({type: 'TOTAL_CART_ITEM', value})
         }
     }

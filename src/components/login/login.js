@@ -126,7 +126,6 @@ class Login extends Component {
     }
 
     render() {
-        console.log(this.state);
         if (this.state.redirect) {
             return (<Redirect to={'/'}/>)
         }
